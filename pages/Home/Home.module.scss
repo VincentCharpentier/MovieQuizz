@@ -1,0 +1,15 @@
+@import 'Styles/sizes';
+
+.root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu {
+    flex: 1;
+}
+
+.link {
+    margin-bottom: $M;
+}

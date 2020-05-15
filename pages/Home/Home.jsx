@@ -1,12 +1,21 @@
 import React from 'react';
-import Head from 'next/head';
+
+import Link from 'Components/Link';
 import PageTitle from 'Components/PageTitle';
+import MainMenu from 'Components/MainMenu';
+
+import styles from './Home.module.scss';
 
 const HomePage = () => {
   return (
     <>
       <PageTitle>Home</PageTitle>
-      <div>Hello World</div>
+      <div className={styles.root}>
+        <MainMenu className={styles.menu} />
+        <Link href="/about" className={styles.link}>
+          About
+        </Link>
+      </div>
     </>
   );
 };
