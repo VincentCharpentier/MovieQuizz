@@ -3,7 +3,11 @@
     box-sizing: border-box;
 }
 
-// App must always be 100%
+/* App must always be 100% */
 html, body, #__next {
     height: 100%;
+}
+
+body {
+    font-size: clamp(1rem, 1rem + 2vw, 3rem);
 }
