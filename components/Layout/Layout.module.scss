@@ -1,2 +1,8 @@
 .root {
+    height: 100%;
+
+    // must have only one child (the current page)
+    &>*:first-child {
+        height: 100%;
+    }
 }
