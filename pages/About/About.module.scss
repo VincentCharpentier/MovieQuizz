@@ -1,0 +1,14 @@
+@import "Styles/sizes";
+
+.root { 
+    padding: $M;
+    text-align: center;
+
+    img {
+        max-height: 50vh;
+    }
+
+    &>*:not(:first-child) {
+        margin-top: $M;
+    }
+}
