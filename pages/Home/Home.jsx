@@ -1,12 +1,12 @@
 import React from 'react';
 import Head from 'next/head';
-
-import Layout from 'Components/Layout';
+import PageTitle from 'Components/PageTitle';
 
 const HomePage = () => {
   return (
     <>
-      <Layout title="Home">Hello World</Layout>
+      <PageTitle>Home</PageTitle>
+      <div>Hello World</div>
     </>
   );
 };
