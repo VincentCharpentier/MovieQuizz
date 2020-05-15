@@ -1,0 +1,9 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+// App must always be 100%
+html, body, #__next {
+    height: 100%;
+}
