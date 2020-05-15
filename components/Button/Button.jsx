@@ -2,12 +2,8 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
+import randomColor from 'Utils/randomColor';
 import styles from './Button.module.scss';
-
-const computeRandomColor = () => {
-  let hue = Math.round(Math.random() * 360);
-  return `hsl(${hue}, 65%, 65%)`;
-};
 
 const Button = ({
   color,
@@ -16,7 +12,7 @@ const Button = ({
   className = null,
   children,
 }) => {
-  let background = useMemo(() => color ?? computeRandomColor(), [color]);
+  let background = useMemo(() => color ?? randomColor(), [color]);
 
   const props = {
     style: { background },
