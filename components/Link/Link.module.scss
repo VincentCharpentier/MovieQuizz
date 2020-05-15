@@ -1,0 +1,12 @@
+@import 'Styles/timing';
+
+.root {
+    transition: filter $t-quick ease;
+    
+    &:focus, &:hover {
+        filter: saturate(2);
+    }
+    &:active{
+        filter: saturate(2) hue-rotate(180deg);
+    }
+}
