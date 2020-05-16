@@ -11,6 +11,8 @@ const interactionEvents = [
 let audioTrack;
 function loadSound() {
   audioTrack = new Audio('/sounds/music.mp3');
+  audioTrack.loop = true;
+  audioTrack.volume = 0.5;
 }
 function play() {
   audioTrack.currentTime = 0;
