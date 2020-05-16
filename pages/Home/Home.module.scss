@@ -8,6 +8,12 @@
     animation: slideIn $t-quick ease-out;
 }
 
+.mainTitle {
+    margin-top: $L;
+    font-size: 2em;
+    animation: title 2*$t-long linear infinite alternate, titleIntro $t-normal ease-out;
+}
+
 .menu {
     flex: 1;
 }
@@ -22,5 +28,42 @@
     }
     to {
         transform: translateY(0);
+    }
+}
+
+
+$angle: 3deg;
+$scale-factor: 1.1;
+$shadow-offset-y: 8px;
+$shadow-offset-x: 2px;
+$shadow-blur: 8px;
+$shadow-color: rgba(#000,0.75);
+@keyframes title {
+    // top-left to bottom-right
+    0% {
+        transform: scale(1) rotate(#{$angle});
+        text-shadow: $shadow-offset-x #{$shadow-offset-y + -1px}  #{$shadow-blur} $shadow-color;
+    }
+
+    // horizontal
+    50% {
+        transform: scale(#{$scale-factor}) rotate(0deg);
+        text-shadow: $shadow-offset-x 0 #{$shadow-blur + 3px} $shadow-color;
+    }
+    
+    // bottom-left to top-right
+    100% {
+        transform: scale(1) rotate(#{-$angle});
+        text-shadow: $shadow-offset-x #{-$shadow-offset-y } #{$shadow-blur} $shadow-color;
+    }
+}
+
+@keyframes titleIntro {
+    from {
+        opacity: 0;
+        font-size: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
