@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'Components/Link';
 import PageTitle from 'Components/PageTitle';
 import MainMenu from 'Components/MainMenu';
+import Routes from 'Constants/routes';
 
 import styles from './Home.module.scss';
 
@@ -12,7 +13,7 @@ const HomePage = () => {
       <PageTitle>Home</PageTitle>
       <div className={styles.root}>
         <MainMenu className={styles.menu} />
-        <Link href="/about" className={styles.link}>
+        <Link href={Routes.ABOUT} className={styles.link}>
           About
         </Link>
       </div>
