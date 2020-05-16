@@ -16,4 +16,8 @@
     &:active{
         filter: saturate(2) hue-rotate(180deg);
     }
+    &:disabled {
+        filter: grayscale(1);
+        cursor: not-allowed;
+    }
 }

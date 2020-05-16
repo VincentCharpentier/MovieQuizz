@@ -9,9 +9,9 @@ import styles from './Button.module.scss';
 const Button = ({
   color,
   tabIndex = 0,
-  onClick = () => null,
   className = null,
   children,
+  ...rest
 }) => {
   const randomColor = useRandomColor();
   let background = useMemo(() => color ?? randomColor, [color, randomColor]);
@@ -20,14 +20,13 @@ const Button = ({
     style: { background },
     className: clsx(styles.root, className),
     tabIndex,
-    onClick,
+    ...rest,
   };
   return <button {...props}>{children}</button>;
 };
 
 Button.propTypes = {
   color: PropTypes.string,
-  onClick: PropTypes.func,
 };
 
 export default Button;
