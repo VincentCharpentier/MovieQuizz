@@ -2,14 +2,14 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import randomColor from 'Utils/randomColor';
+import useRandomColor from 'Hooks/useRandomColor';
 
 import styles from './Link.module.scss';
 
 export default ({ className, color: _color, style, children, ...rest }) => {
-  let color = useMemo(() => _color ?? randomColor(75, 40), [_color]);
+  const randomColor = useRandomColor(75, 40);
+  let color = useMemo(() => _color ?? randomColor, [_color, randomColor]);
 
-  console.log('test', color);
   const props = {
     style: { color, ...style },
     className: clsx(styles.root, className),
