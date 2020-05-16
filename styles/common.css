@@ -8,6 +8,7 @@
 /* App must always be 100% */
 html, body, #__next {
     height: 100%;
+    overflow: hidden;
 }
 
 body {
