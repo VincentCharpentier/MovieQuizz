@@ -1,5 +1,27 @@
+@import "Styles/timing";
+
 .root {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     width: fit-content;
+    transition: transform $t-quick ease;
+    transform: translateX(100vw);
+
+    &.left {
+        transform: translateX(-100vw);
+    }
+    &.current {
+        transform: translateX(0);
+    }
 }
