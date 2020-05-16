@@ -31,15 +31,11 @@ function renderCellGrid(width, height) {
   return result;
 }
 
-export default () => {
+const Background = (props) => {
   const [[width, height], setDimensions] = useState([0, 0]);
 
   const resize = useCallback(() => {
     const { innerHeight, innerWidth } = window;
-    console.log(
-      Math.ceil(innerWidth / CELL_SIZE),
-      Math.ceil(innerHeight / CELL_SIZE),
-    );
     setDimensions([
       Math.ceil(innerWidth / CELL_SIZE),
       Math.ceil(innerHeight / CELL_SIZE),
@@ -55,3 +51,6 @@ export default () => {
 
   return <div className={styles.grid}>{renderCellGrid(width, height)}</div>;
 };
+
+// prevent useless rerender since component has no props
+export default React.memo(Background);
