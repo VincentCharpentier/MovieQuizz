@@ -7,7 +7,7 @@ import randomColor from 'Utils/randomColor';
 import styles from './Link.module.scss';
 
 export default ({ className, color: _color, style, children, ...rest }) => {
-  let color = useMemo(() => _color ?? randomColor(), [_color]);
+  let color = useMemo(() => _color ?? randomColor(75, 40), [_color]);
 
   console.log('test', color);
   const props = {
