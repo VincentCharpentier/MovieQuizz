@@ -5,6 +5,7 @@
       "Components/*": ["components/*"],
       "Constants/*": ["constants/*"],
       "Hooks/*": ["hooks/*"],
+      "Models/*": ["models/*"],
       "Styles/*": ["styles/*"],
       "Utils/*": ["utils/*"],
     }
