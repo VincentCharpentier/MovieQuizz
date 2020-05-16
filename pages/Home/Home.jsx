@@ -12,7 +12,7 @@ const HomePage = () => {
     <>
       <PageTitle>Home</PageTitle>
       <div className={styles.root}>
-        <h1 className={styles.mainTitle}>Music Quizz</h1>
+        <h1 className={styles.mainTitle}>Movie Quizz</h1>
         <MainMenu className={styles.menu} />
         <Link href={Routes.ABOUT} className={styles.link}>
           About

@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 
-const BASE_TITLE = 'Music Quiz';
+const BASE_TITLE = 'Movie Quiz';
 
 const computeTitle = (title) =>
   title ? [BASE_TITLE, title].join(' - ') : BASE_TITLE;
