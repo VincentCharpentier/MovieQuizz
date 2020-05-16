@@ -8,7 +8,7 @@
     margin: $S;
     transition: filter $t-quick ease;
     border-radius: 5px;
-    font-size: inherit;
+    font: inherit;
 
     &:focus, &:hover {
         filter: saturate(2);
