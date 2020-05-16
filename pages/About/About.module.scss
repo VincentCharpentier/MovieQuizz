@@ -5,10 +5,18 @@
     text-align: center;
 
     img {
-        max-height: 50vh;
+        height: 50vh;
+        background-color: rgba(#FFF, .75);
+        padding: $M;
+        border-radius: $M 0;
     }
 
     &>*:not(:first-child) {
         margin-top: $M;
+    }
+
+    a {
+        // prevent margin not working
+        display: inline-block;
     }
 }
