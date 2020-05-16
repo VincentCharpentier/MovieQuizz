@@ -2,6 +2,7 @@ import React, { useCallback, useState, useMemo } from 'react';
 import clsx from 'clsx';
 
 import Button from 'Components/Button';
+import { SFX_VALIDATE } from 'Utils/sfx';
 
 import styles from './MainMenu.module.scss';
 
@@ -54,8 +55,8 @@ const MainMenu = ({ className }) => {
   return (
     <div className={clsx(styles.root, className)}>
       <Menu menuId={MENU.MAIN} currentMenu={currentMenu}>
-        <Button>Play !</Button>
-        <Button>Multiplayer</Button>
+        <Button clickSound={SFX_VALIDATE}>Play !</Button>
+        <Button disabled>Multiplayer</Button>
         <Button onClick={goto(MENU.SETTINGS)}>Settings</Button>
       </Menu>
       <Menu menuId={MENU.SETTINGS} currentMenu={currentMenu}>
