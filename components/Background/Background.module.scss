@@ -1,0 +1,28 @@
+@import "Styles/timing";
+
+.grid {
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    filter: blur(10px) grayscale(.5);
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    animation: color-rotation 2*$t-long infinite linear;
+}
+
+@keyframes color-rotation {
+    from {
+        filter: saturate(1) hue-rotate(0);
+    }
+    to {
+        filter: saturate(1.5) hue-rotate(360deg);
+    }
+}
