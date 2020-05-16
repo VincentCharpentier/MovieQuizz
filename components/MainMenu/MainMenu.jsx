@@ -1,7 +1,9 @@
 import React, { useCallback, useState, useMemo } from 'react';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 
 import Button from 'Components/Button';
+import Routes from 'Constants/routes';
 import { SFX_VALIDATE } from 'Utils/sfx';
 
 import styles from './MainMenu.module.scss';
@@ -46,16 +48,21 @@ const Menu = ({ menuId, currentMenu, children }) => {
 };
 
 const MainMenu = ({ className }) => {
+  const router = useRouter();
+
   const [currentMenu, setCurrentMenu] = useState(MENU.MAIN);
 
   const goto = useCallback((menuId) => () => setCurrentMenu(menuId), [
     setCurrentMenu,
   ]);
+  const navTo = useCallback((route) => () => router.push(route));
 
   return (
     <div className={clsx(styles.root, className)}>
       <Menu menuId={MENU.MAIN} currentMenu={currentMenu}>
-        <Button clickSound={SFX_VALIDATE}>Play !</Button>
+        <Button onClick={navTo(Routes.SOLO_GAME)} clickSound={SFX_VALIDATE}>
+          Play !
+        </Button>
         <Button disabled>Multiplayer</Button>
         <Button onClick={goto(MENU.SETTINGS)}>Settings</Button>
       </Menu>
