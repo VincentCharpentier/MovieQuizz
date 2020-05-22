@@ -12,6 +12,6 @@ html, body, #__next {
 }
 
 body {
-    font-size: clamp(1rem, 1rem + 2vw, 3rem);
+    font-size: clamp(1rem, 1rem + 2vw, 2rem);
     font-family: 'Comfortaa', cursive;
 }
