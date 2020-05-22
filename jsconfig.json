@@ -4,6 +4,7 @@
     "paths": {
       "Components/*": ["components/*"],
       "Constants/*": ["constants/*"],
+      "Contexts/*": ["contexts/*"],
       "Hooks/*": ["hooks/*"],
       "Models/*": ["models/*"],
       "Styles/*": ["styles/*"],
