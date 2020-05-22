@@ -2,13 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "Components/*": ["components/*"],
-      "Constants/*": ["constants/*"],
-      "Contexts/*": ["contexts/*"],
-      "Hooks/*": ["hooks/*"],
-      "Models/*": ["models/*"],
-      "Styles/*": ["styles/*"],
-      "Utils/*": ["utils/*"],
+      "Components/*": ["src/components/*"],
+      "Constants/*": ["src/constants/*"],
+      "Contexts/*": ["src/contexts/*"],
+      "Hooks/*": ["src/hooks/*"],
+      "Models/*": ["src/models/*"],
+      "Styles/*": ["src/styles/*"],
+      "Utils/*": ["src/utils/*"]
     }
   }
 }
