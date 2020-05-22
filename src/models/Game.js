@@ -1,12 +1,16 @@
 import { TmdbAPI } from 'Utils/api';
 import EventBus from 'Utils/eventBus';
 
+const MAX_ROUND = 10;
+
 const EVENT = {
   TOUR_START: 'TOUR_START',
   SCORE: 'SCORE',
+  GAME_OVER: 'GAME_OVER',
 };
 
 export default class Game {
+  _hasData = false;
   movies = [];
   actors = [];
   running = false;
@@ -16,10 +20,15 @@ export default class Game {
   answers = new Map();
   scores = new Map();
   eventBus = new EventBus();
+  roundCount = 1;
 
   init = async () => {
-    this.movies = await TmdbAPI.getTopMovies();
-    this.actors = this.movies.map(({ cast }) => cast).flat();
+    this.roundCount = 1;
+    if (!this._hasData) {
+      this.movies = await TmdbAPI.getTopMovies();
+      this.actors = this.movies.map(({ cast }) => cast).flat();
+      this._hasData = true;
+    }
   };
 
   onTourDataChange(cb) {
@@ -34,6 +43,13 @@ export default class Game {
   }
   offScoreChange(cb) {
     this.eventBus.removeEventListener(EVENT.SCORE, cb);
+  }
+
+  onGameOver(cb) {
+    this.eventBus.addEventListener(EVENT.GAME_OVER, cb);
+  }
+  offGameOver(cb) {
+    this.eventBus.removeEventListener(EVENT.GAME_OVER, cb);
   }
 
   startTour = () => {
@@ -59,6 +75,10 @@ export default class Game {
       }
     });
     this.notifyScoreUpdate();
+    this.roundCount++;
+    if (this.roundCount > MAX_ROUND) {
+      this.eventBus.emit(EVENT.GAME_OVER);
+    }
   };
 
   notifyScoreUpdate() {
