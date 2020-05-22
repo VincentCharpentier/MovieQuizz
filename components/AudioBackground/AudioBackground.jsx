@@ -1,4 +1,7 @@
-import { useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+
+import SettingsCtx from 'Contexts/Settings';
+import { BG_AUDIO } from 'Utils/sfx';
 
 const interactionEvents = [
   'mousedown',
@@ -8,39 +11,61 @@ const interactionEvents = [
   'keydown',
 ];
 
-let audioTrack;
-function loadSound() {
-  audioTrack = new Audio('/sounds/music.mp3');
-  audioTrack.loop = true;
-  audioTrack.volume = 0.5;
-}
-function play() {
-  audioTrack.currentTime = 0;
-  return audioTrack.play();
-}
-function stop() {
-  return audioTrack.pause();
-}
+// ratio to apply on volume settings (plays background music lower than the rest)
+const VOLUME_RATIO = 0.8;
 
-const AudioBackground = () => {
-  useEffect(() => {
-    loadSound();
+async function tryPlayAsap() {
+  let cleanup = () => null;
+  const initPlay = async () => {
+    await BG_AUDIO.play();
+    interactionEvents.forEach((ev) => window.removeEventListener(ev, initPlay));
+  };
+  try {
+    await initPlay();
+  } catch (err) {
     // workaround autoplay limitations
-    const initPlay = async () => {
-      await play();
+    console.log("can't autoplay, waiting for user interaction");
+    interactionEvents.forEach((ev) => window.addEventListener(ev, initPlay));
+    cleanup = () =>
       interactionEvents.forEach((ev) =>
         window.removeEventListener(ev, initPlay),
       );
-    };
-    initPlay().catch((err) => {
-      console.log("can't autoplay, waiting for user interaction");
-      interactionEvents.forEach((ev) => window.addEventListener(ev, initPlay));
-    });
+  }
+  return cleanup;
+}
+
+const AudioBackground = () => {
+  const cleanUpListeners = useRef(null);
+  const { soundActive, soundVolume } = useContext(SettingsCtx);
+
+  useEffect(() => {
+    BG_AUDIO.loop = true;
+    BG_AUDIO.volume = VOLUME_RATIO;
     return () => {
       // app unmount or hot-reload
-      stop();
+      BG_AUDIO.stop();
     };
   }, []);
+
+  useEffect(() => {
+    if (cleanUpListeners.current) {
+      cleanUpListeners.current();
+      cleanUpListeners.current = null;
+    }
+    (async () => {
+      if (soundActive) {
+        cleanUpListeners.current = await tryPlayAsap();
+      } else {
+        BG_AUDIO.stop();
+      }
+    })();
+  }, [soundActive]);
+
+  useEffect(() => {
+    if (BG_AUDIO) {
+      BG_AUDIO.setVolume(soundVolume * VOLUME_RATIO);
+    }
+  }, [soundVolume]);
 
   return null;
 };
