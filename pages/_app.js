@@ -1,11 +1,15 @@
 import Layout from 'Components/Layout';
 import 'Styles/common.css';
 
+import { Provider as SettingsProvider } from 'Contexts/Settings';
+
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <SettingsProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </SettingsProvider>
   );
 }
 
