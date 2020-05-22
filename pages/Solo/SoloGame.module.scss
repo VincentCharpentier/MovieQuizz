@@ -1,0 +1,61 @@
+@import "Styles/sizes";
+
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin blockPadding() {
+    padding: clamp(0px, .25em, $M);
+}
+
+.picContainer {
+    display: flex;
+    justify-content: center;
+    
+    .subjectContainer {
+        @include blockPadding;
+        flex: 1;
+
+        &:first-child {
+            text-align: right;
+        }
+    }
+
+    img {
+        height: 50vh;
+    }
+}
+
+.btnRow {
+    display: flex;
+    justify-content: center;
+
+    // btn container
+    & > * {
+        @include blockPadding;
+        flex: 1;
+
+        &:first-child {
+            text-align: right;
+        }
+    }
+
+    .btn {
+        margin: 0;
+    }
+}
+
+.scoreRow {
+    font-size: .8em;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
