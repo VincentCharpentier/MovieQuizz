@@ -7,9 +7,12 @@ export default class SfxSound {
   }
   play() {
     this.sound.currentTime = 0;
-    this.sound.play();
+    return this.sound.play();
   }
   stop() {
-    this.sound.pause();
+    return this.sound.pause();
+  }
+  setVolume(volume) {
+    this.sound.volume = volume;
   }
 }
