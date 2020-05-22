@@ -5,6 +5,10 @@ const DEFAULT_STATE = {
   soundActive: true,
   soundVolume: 1,
 };
+const FIRST_RENDER_STATE = {
+  ...DEFAULT_STATE,
+  soundActive: false,
+};
 
 function restoreSettings() {
   const json = localStorage.getItem(STORAGE_KEY) ?? '{}';
@@ -18,7 +22,7 @@ function saveSettings(state) {
 const Context = createContext({});
 
 export const Provider = ({ children }) => {
-  const [state, setState] = useState(DEFAULT_STATE);
+  const [state, setState] = useState(FIRST_RENDER_STATE);
 
   useEffect(() => setState(restoreSettings()), []);
 
