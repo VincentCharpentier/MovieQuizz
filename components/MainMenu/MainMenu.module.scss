@@ -25,3 +25,14 @@
         transform: translateX(0);
     }
 }
+
+.menuEntry {
+    margin: .5em;
+}
+
+.volumeCtrl {
+    text-align: center;
+    * {
+        width: 100%;
+    }
+}
