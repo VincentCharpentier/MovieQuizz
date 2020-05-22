@@ -4,5 +4,6 @@
     // must have only one child (the current page)
     &>*:first-child {
         height: 100%;
+        padding: .5em;
     }
 }
