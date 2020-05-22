@@ -30,7 +30,7 @@ const Button = ({
       _clickSound.play();
       _onClick(e);
     },
-    [_clickSound],
+    [_clickSound, _onClick],
   );
 
   const props = {
