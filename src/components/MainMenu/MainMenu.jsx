@@ -57,7 +57,7 @@ const MainMenu = ({ className }) => {
     setSoundVolume,
   } = useContext(SettingsContext);
 
-  const [currentMenu, setCurrentMenu] = useState(MENU.SOUND);
+  const [currentMenu, setCurrentMenu] = useState(MENU.MAIN);
 
   const goto = useCallback((menuId) => () => setCurrentMenu(menuId), [
     setCurrentMenu,
