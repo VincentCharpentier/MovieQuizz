@@ -1,5 +1,5 @@
 export default class SfxSound {
-  constructor(url) {
+  constructor() {
     this.sound = null;
   }
   load(url) {
