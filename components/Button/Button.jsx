@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
+import SettingsCtx from 'Contexts/Settings';
 import useRandomColor from 'Hooks/useRandomColor';
 import { SFX_HOVER, SFX_SELECT } from 'Utils/sfx';
 
@@ -17,20 +18,33 @@ const Button = ({
   children,
   ...rest
 }) => {
+  const { soundActive, soundVolume } = useContext(SettingsCtx);
   const _clickSound = clickSound ?? SFX_SELECT;
   const randomColor = useRandomColor();
   let background = useMemo(() => color ?? randomColor, [color, randomColor]);
 
-  const onMouseEnter = useCallback((e) => {
-    SFX_HOVER.play();
-    _onMouseEnter(e);
-  }, []);
+  useEffect(() => {
+    SFX_HOVER.setVolume(soundVolume);
+    _clickSound.setVolume(soundVolume);
+  }, [soundVolume]);
+
+  const onMouseEnter = useCallback(
+    (e) => {
+      if (soundActive) {
+        SFX_HOVER.play();
+      }
+      _onMouseEnter(e);
+    },
+    [soundActive],
+  );
   const onClick = useCallback(
     (e) => {
-      _clickSound.play();
+      if (soundActive) {
+        _clickSound.play();
+      }
       _onClick(e);
     },
-    [_clickSound, _onClick],
+    [_clickSound, _onClick, soundActive],
   );
 
   const props = {
