@@ -62,7 +62,7 @@ const MainMenu = ({ className }) => {
   const goto = useCallback((menuId) => () => setCurrentMenu(menuId), [
     setCurrentMenu,
   ]);
-  const navTo = useCallback((route) => () => router.push(route));
+  const navTo = useCallback((route) => () => router.push(route), [router]);
 
   const toggleSound = useCallback(() => {
     setSoundActive(!soundActive);
