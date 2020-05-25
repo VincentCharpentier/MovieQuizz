@@ -2,6 +2,8 @@ import { TmdbAPI } from 'Utils/api';
 import EventBus from 'Utils/eventBus';
 
 const MAX_ROUND = 10;
+const ROUND_DURATION = 5000;
+const ANSWER_BASE_SCORE = 1000;
 
 const EVENT = {
   TOUR_START: 'TOUR_START',
@@ -21,6 +23,7 @@ export default class Game {
   scores = new Map();
   eventBus = new EventBus();
   roundCount = 1;
+  endRoundTimer = null;
 
   init = async () => {
     this.roundCount = 1;
@@ -31,10 +34,10 @@ export default class Game {
     }
   };
 
-  onTourDataChange(cb) {
+  onRoundDataChange(cb) {
     this.eventBus.addEventListener(EVENT.TOUR_START, cb);
   }
-  offTourDataChange(cb) {
+  offRoundDataChange(cb) {
     this.eventBus.removeEventListener(EVENT.TOUR_START, cb);
   }
 
@@ -52,10 +55,11 @@ export default class Game {
     this.eventBus.removeEventListener(EVENT.GAME_OVER, cb);
   }
 
-  startTour = () => {
+  startRound = () => {
     this._tourData = this._pickTwo();
     this.start();
     this.eventBus.emit(EVENT.TOUR_START, this._tourData);
+    this._endRoundTimer = setTimeout(this.endRound, ROUND_DURATION);
   };
 
   start = () => {
@@ -64,20 +68,29 @@ export default class Game {
     this._pid = requestAnimationFrame(this._tick);
   };
 
-  endTour = () => {
+  endRound = () => {
+    clearTimeout(this._endRoundTimer);
     this.stop();
     const { movie, actor } = this._tourData;
     const correctAnswer = movie.cast.some((a) => a.name === actor.name);
-    // check answers
-    [...this.answers.entries()].forEach(([player, answer]) => {
+    // check answers & compute scores
+    [...this.answers.entries()].forEach(([player, [answer, timestamp]]) => {
       if (answer === correctAnswer) {
-        this.scores.set(player, this.scores.get(player) + 1);
+        const answerTime = timestamp - this.startDate;
+        const scoreRatio = 1 - answerTime / ROUND_DURATION;
+        const answerScore = Math.round(ANSWER_BASE_SCORE * scoreRatio);
+        const prevScore = this.scores.get(player);
+        this.scores.set(player, prevScore + answerScore);
       }
     });
+    // clear answers
+    this.answers.clear();
     this.notifyScoreUpdate();
     this.roundCount++;
     if (this.roundCount > MAX_ROUND) {
-      this.eventBus.emit(EVENT.GAME_OVER);
+      this.eventBus.emit(EVENT.GAME_OVER, [...this.scores.entries()]);
+    } else {
+      this.startRound();
     }
   };
 
@@ -86,7 +99,7 @@ export default class Game {
   }
 
   answer(player, answer) {
-    this.answers.set(player, answer);
+    this.answers.set(player, [answer, Date.now()]);
   }
 
   _pickTwo() {

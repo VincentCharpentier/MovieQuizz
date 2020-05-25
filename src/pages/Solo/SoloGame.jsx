@@ -10,21 +10,38 @@ import styles from './SoloGame.module.scss';
 
 const LocalPlayer = Symbol();
 
+const HIGHSCORE_LS_KEY = 'localHighScore';
+function retriveLocalHighscore() {
+  return localStorage.getItem(HIGHSCORE_LS_KEY);
+}
+
+function saveLocalHighscore(highscore) {
+  localStorage.setItem(HIGHSCORE_LS_KEY, highscore);
+}
+
+function getLocalPlayerScore(allScores) {
+  const [, score] = allScores.find(([player]) => player === LocalPlayer);
+  return score;
+}
+
 export default () => {
   const router = useRouter();
   // constant game instant
   let game = useRef(new Game()).current;
   const [loading, setLoading] = useState(true);
   const [actor, setActor] = useState(null);
+  const [highscore, setHighscore] = useState();
   const [movie, setMovie] = useState(null);
   const [score, setScore] = useState(0);
   const [roundNo, setRoundNo] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [timerKey, setTimerKey] = useState(0);
 
-  const answer = useCallback((match) => {
+  const isNewHighScore = !highscore || score > highscore;
+
+  const handleAnswer = useCallback((match) => {
     game.answer(LocalPlayer, match);
-    const answer = game.endTour();
-    game.startTour();
+    game.endRound();
   }, []);
 
   const initGame = useCallback(() => {
@@ -32,13 +49,13 @@ export default () => {
     game.init().then(() => {
       setLoading(false);
       game.addPlayer(LocalPlayer);
-      game.startTour();
+      game.startRound();
     });
   }, [setIsGameOver, setLoading, game]);
 
   const handleScoreUpdate = useCallback(
-    (scores) => {
-      const [, newScore] = scores.find(([player]) => player === LocalPlayer);
+    (allScores) => {
+      const newScore = getLocalPlayerScore(allScores);
       if (newScore > score) {
         // todo: effect
         // console.log('score updated', score, newScore);
@@ -48,15 +65,24 @@ export default () => {
     [score],
   );
 
-  const handleTourDataChange = useCallback((tourData) => {
-    setActor(tourData.actor);
-    setMovie(tourData.movie);
+  const handleRoundDataChange = useCallback((roundData) => {
+    setActor(roundData.actor);
+    setMovie(roundData.movie);
     setRoundNo(game.roundCount);
+    setTimerKey(game.startDate);
   }, []);
 
-  const handleGameOver = useCallback(() => {
-    setIsGameOver(true);
-  }, []);
+  const handleGameOver = useCallback(
+    (allScores) => {
+      const newScore = getLocalPlayerScore(allScores);
+      if (!highscore || newScore > highscore) {
+        saveLocalHighscore(newScore);
+        setHighscore(newScore);
+      }
+      setIsGameOver(true);
+    },
+    [setHighscore, setIsGameOver],
+  );
 
   const handleReplay = useCallback(() => {
     setScore(0);
@@ -68,17 +94,18 @@ export default () => {
   }, [router]);
 
   useEffect(() => {
-    game.onTourDataChange(handleTourDataChange);
+    game.onRoundDataChange(handleRoundDataChange);
     game.onScoreChange(handleScoreUpdate);
     game.onGameOver(handleGameOver);
     return () => {
-      game.offTourDataChange(handleTourDataChange);
+      game.offRoundDataChange(handleRoundDataChange);
       game.offScoreChange(handleScoreUpdate);
       game.offGameOver(handleGameOver);
     };
-  }, [handleTourDataChange, handleScoreUpdate, handleGameOver]);
+  }, [handleRoundDataChange, handleScoreUpdate, handleGameOver]);
 
   useEffect(() => {
+    setHighscore(retriveLocalHighscore());
     initGame();
   }, []);
 
@@ -89,22 +116,47 @@ export default () => {
   return (
     <div className={styles.root}>
       {!isGameOver && (
-        <GameScreen {...{ roundNo, actor, movie, answer, score }} />
+        <GameScreen
+          {...{
+            roundNo,
+            actor,
+            movie,
+            handleAnswer,
+            score,
+            highscore,
+            timerKey,
+          }}
+        />
       )}
-      {isGameOver && <EndGameScreen {...{ score, handleReplay, handleQuit }} />}
+      {isGameOver && (
+        <EndGameScreen
+          {...{ score, handleReplay, handleQuit, isNewHighScore }}
+        />
+      )}
     </div>
   );
 };
 
-const EndGameScreen = ({ score, handleQuit, handleReplay }) => (
+const EndGameScreen = ({ score, handleQuit, handleReplay, isNewHighScore }) => (
   <div className={styles.endGameScreen}>
     <ScoreBlock title="Final Score" value={score} />
-    <Button onClick={handleReplay}>Replay</Button>
-    <Button onClick={handleQuit}>Quit</Button>
+    {isNewHighScore && <div>NEW HIGHSCORE !</div>}
+    <div>
+      <Button onClick={handleReplay}>Replay</Button>
+      <Button onClick={handleQuit}>Quit</Button>
+    </div>
   </div>
 );
 
-const GameScreen = ({ roundNo, actor, movie, answer, score }) => (
+const GameScreen = ({
+  roundNo,
+  actor,
+  movie,
+  handleAnswer,
+  score,
+  highscore,
+  timerKey,
+}) => (
   <>
     <p>Round {roundNo} / 10</p>
     <div className={styles.picContainer}>
@@ -125,11 +177,14 @@ const GameScreen = ({ roundNo, actor, movie, answer, score }) => (
         </div>
       )}
     </div>
+    <div className={styles.timerBar}>
+      <div key={timerKey} className={styles.fillBar} />
+    </div>
     <div className={styles.btnRow}>
       <div>
         <Button
           className={styles.btn}
-          onClick={() => answer(true)}
+          onClick={() => handleAnswer(true)}
           clickSound={SFX_VALIDATE}
           color="#8fef8f">
           Plays in
@@ -138,7 +193,7 @@ const GameScreen = ({ roundNo, actor, movie, answer, score }) => (
       <div>
         <Button
           className={styles.btn}
-          onClick={() => answer(false)}
+          onClick={() => handleAnswer(false)}
           clickSound={SFX_VALIDATE}
           color="#ef8f8f">
           Doesn't
@@ -147,7 +202,7 @@ const GameScreen = ({ roundNo, actor, movie, answer, score }) => (
     </div>
     <div className={styles.scoreRow}>
       <ScoreBlock title="Score" value={score} />
-      <ScoreBlock title="Highscore" value={0} />
+      <ScoreBlock title="Highscore" value={highscore || 'N/A'} />
     </div>
   </>
 );

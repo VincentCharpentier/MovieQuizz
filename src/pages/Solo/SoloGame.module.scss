@@ -63,4 +63,41 @@
 .endGameScreen {
     align-self: center;
     text-align: center;
+    justify-content: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.timerBar {
+    $size: .2em;
+    border: 1px solid black;
+    border-radius: calc((#{$size} + 2px) / 2);
+    height: $size;
+    box-sizing: content-box;
+    text-align: center;
+    overflow: hidden;
+
+    .fillBar {
+        vertical-align: top;
+        display: inline-block;
+        animation: fillBar 5s linear;
+        height: 100%;
+        background-color: red;
+        width: 0;
+    }
+}
+
+@keyframes fillBar {
+    0% {
+        background-color: green;
+        width: 100%;
+    }
+    50% {
+        background-color: yellow;
+    }
+    100% {
+        background-color: red;
+        width: 0;
+    }
 }
